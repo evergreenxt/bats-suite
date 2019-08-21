@@ -35,6 +35,11 @@
 }
 
 @test "check SyncVM flask label" {
+    local type="$(xec-vm -n syncvm -g type 2>/dev/null)"
+    if [ "${type}" != "syncvm" ]; then
+        skip "SyncVM is not deployed."
+    fi
+
     run xec-vm -n syncvm -g flask-label
 
     [ "$status" -eq 0 ]
