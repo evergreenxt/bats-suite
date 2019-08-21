@@ -9,13 +9,13 @@
 }
 
 @test "no kernel classes/permissions left undefined in the SELinux policy" {
-    count=$(grep SELinux.*not defined /var/log/messages|wc -l)
+    count=$(grep 'SELinux.*not defined' /var/log/messages | wc -l)
 
     [ "${count}" -eq 0 ]
 }
 
 @test "no avc messages in /var/log/messages" {
-    count=$(grep avc:.*denied /var/log/messages|wc -l)
+    count=$(grep 'avc:.*denied' /var/log/messages | wc -l)
 
     [ "${count}" -eq 0 ]
 }
