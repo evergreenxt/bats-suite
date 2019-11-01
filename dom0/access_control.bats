@@ -5,17 +5,17 @@
 }
 
 @test "check XSM enforcing" {
-    [ "$(xenops getenforce)" = "Enforcing" ]
+    [ "$(xl getenforce)" = "Enforcing" ]
 }
 
 @test "no kernel classes/permissions left undefined in the SELinux policy" {
-    count=$(grep SELinux.*not defined /var/log/messages|wc -l)
+    count=$(grep 'SELinux.*not defined' /var/log/messages | wc -l)
 
     [ "${count}" -eq 0 ]
 }
 
 @test "no avc messages in /var/log/messages" {
-    count=$(grep avc:.*denied /var/log/messages|wc -l)
+    count=$(grep 'avc:.*denied' /var/log/messages | wc -l)
 
     [ "${count}" -eq 0 ]
 }
@@ -35,6 +35,11 @@
 }
 
 @test "check SyncVM flask label" {
+    local type="$(xec-vm -n syncvm -g type 2>/dev/null)"
+    if [ "${type}" != "syncvm" ]; then
+        skip "SyncVM is not deployed."
+    fi
+
     run xec-vm -n syncvm -g flask-label
 
     [ "$status" -eq 0 ]
